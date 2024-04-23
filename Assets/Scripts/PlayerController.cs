@@ -74,6 +74,15 @@ public class PlayerController : MonoBehaviour
     [Header("Health Settings")]
     public int health;
     public int maxHealth;
+    [SerializeField] GameObject bloodSpurt;
+    [SerializeField] private float hitFlashSpeed;
+    //Delegate can be used to call multiple methods. We can use this to not only increase hearts, but decrease them as well
+    public delegate void OnHealthChangedDelegate();
+    [HideInInspector] public OnHealthChangedDelegate onHealthChangedCallBack;
+    private float healTimer;
+    [SerializeField] private float timeToHeal;
+    [Space(5)]
+
 
     //Reference the PlayerStateList
     [HideInInspector] public PlayerStateList pState;
@@ -81,8 +90,12 @@ public class PlayerController : MonoBehaviour
     //Will be accessible by all our scripts
     public static PlayerController Instance;
     private Rigidbody2D rb;
+    private SpriteRenderer sr;
     //Helps get directional input from player
     private float xAxis, yAxis;
+    //Variables to be used to modify timescale
+    private bool restoreTime;
+    private float restoreTimeSpeed;
 
     //Is called before the Start function
     private void Awake()
@@ -98,7 +111,7 @@ public class PlayerController : MonoBehaviour
             Instance = this;
         }
 
-        health = maxHealth;
+        Health = maxHealth;
     }
 
     void Start()
@@ -107,6 +120,9 @@ public class PlayerController : MonoBehaviour
         pState = GetComponent<PlayerStateList>();
         //Assigns to player character
         rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
+
+        //anim = GetComponent<Animator>();
 
         gravity = rb.gravityScale;
     }
@@ -131,6 +147,15 @@ public class PlayerController : MonoBehaviour
         Jump();
         StartDash();
         Attack();
+        RestoreTimeScale();
+        FlashWhiteInvincible();
+        Heal();
+    }
+
+    //FixedUpdate is affected by timescale, whereas Update is not. Update will run every frame regardless of whatever is going on
+    private void FixedUpdate()
+    {
+        if (pState.dashing) return;
         Recoil();
     }
 
@@ -141,7 +166,7 @@ public class PlayerController : MonoBehaviour
         //Gets the vertical axis input
         yAxis = Input.GetAxisRaw("Vertical");
         //Gets the attack input
-        attack = Input.GetMouseButtonDown(0);
+        attack = Input.GetButtonDown("Attack");
     }
 
     void Flip()
@@ -346,7 +371,7 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(float _damage)
     {
-        health -= Mathf.RoundToInt(_damage);
+        Health -= Mathf.RoundToInt(_damage);
         StartCoroutine(StopTakingDamage());
     }
 
@@ -354,18 +379,99 @@ public class PlayerController : MonoBehaviour
     IEnumerator StopTakingDamage()
     {
         pState.invincible = true;
+        GameObject _bloodSpurtParticles = Instantiate(bloodSpurt, transform.position, Quaternion.identity);
+        Destroy(_bloodSpurtParticles, 1.5f);
         //anim.SetTrigger("TakeDamage");
-        ClampHealth();
         yield return new WaitForSeconds(1f);
         pState.invincible = false;
     }
 
-    //Prevents health from going above max and below min
-    void ClampHealth()
+    //Goes from white to black to white again and again so long as parameters are fulfilled
+    void FlashWhiteInvincible()
     {
-        health = Mathf.Clamp(health, 0, maxHealth);
+        sr.material.color = pState.invincible ? Color.Lerp(Color.white, Color.black, Mathf.PingPong(Time.time * hitFlashSpeed, 1.0f)) : Color.white;
     }
 
+    void RestoreTimeScale()
+    {
+        if (restoreTime)
+        {
+            if (Time.timeScale < 1)
+            {
+                Time.timeScale += Time.deltaTime * restoreTimeSpeed;
+            }
+            else
+            {
+                //If our timescale somehow goes over 1, this sets it back to 1
+                Time.timeScale = 1;
+                restoreTime = false;
+            }
+        }
+    }
+
+    public void HitStartTime(float _newTimeScale, int _restoreSpeed, float _delay)
+    {
+        //Allows for the restore time speed to be different depending on the enemy that attacks the player
+        restoreTimeSpeed = _restoreSpeed;
+        Time.timeScale = _newTimeScale;
+        //If we have been attacked
+        if (_delay > 0)
+        {
+            StopCoroutine(StartTimeAgain(_delay));
+            StartCoroutine(StartTimeAgain(_delay));
+        }
+        else
+        {
+            restoreTime = true;
+        }
+    }
+
+    IEnumerator StartTimeAgain(float _delay)
+    {
+        restoreTime = true;
+        yield return new WaitForSeconds(_delay);
+    }
+
+    //Makes Health a Property and lets us get and set health as needed (health and Health are different in this case)
+    public int Health
+    {
+        get { return health; }
+        set
+        {
+            if (health != value)
+            {
+                health = Mathf.Clamp(value, 0, maxHealth);
+
+                if (onHealthChangedCallBack != null)
+                {
+                    onHealthChangedCallBack.Invoke();
+                }
+            }
+        }
+    }
+
+    void Heal()
+    {
+        if (Input.GetButton("Healing") && Health < maxHealth && !pState.jumping && !pState.dashing)
+        {
+            pState.healing = true;
+            //anim.SetBool("Healing", true);
+
+            healTimer += Time.deltaTime;
+            if(healTimer >= timeToHeal)
+            {
+                Health++;
+                healTimer = 0;
+            }
+        }
+        else
+        {
+            pState.healing = false;
+            healTimer = 0;
+        }
+    }
+
+    //Prevents health from going above max and below min
     public bool Grounded()
     {
         //Checks if we are actually on the ground. Applies even if we are on an edge
