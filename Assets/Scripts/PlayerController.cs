@@ -76,13 +76,17 @@ public class PlayerController : MonoBehaviour
     public int maxHealth;
     [SerializeField] GameObject bloodSpurt;
     [SerializeField] private float hitFlashSpeed;
-    //Delegate can be used to call multiple methods. We can use this to not only increase hearts, but decrease them as well
+    //Will be responsible to any updates to the heart UI. Delegate void can be used for multiple methods, in this case we are using it to increase and decrease our hearts on screen
     public delegate void OnHealthChangedDelegate();
     [HideInInspector] public OnHealthChangedDelegate onHealthChangedCallBack;
     private float healTimer;
     [SerializeField] private float timeToHeal;
     [Space(5)]
 
+    [Header("Mana Settings")]
+    [SerializeField] private float mana;
+    [SerializeField] private float manaDrainSpeed;
+    [SerializeField] private float manaGain;
 
     //Reference the PlayerStateList
     [HideInInspector] public PlayerStateList pState;
@@ -125,6 +129,8 @@ public class PlayerController : MonoBehaviour
         //anim = GetComponent<Animator>();
 
         gravity = rb.gravityScale;
+
+        Mana = mana;
     }
 
     private void OnDrawGizmos()
@@ -142,20 +148,21 @@ public class PlayerController : MonoBehaviour
         UpdateJumpVariables();
         //Movement does not get called if we are in the middle of dashing
         if (pState.dashing) return;
-        Flip();
+        RestoreTimeScale();
+        FlashWhileInvincible();
         Move();
+        Heal();
+        if (pState.healing) return;
+        Flip();
         Jump();
         StartDash();
         Attack();
-        RestoreTimeScale();
-        FlashWhiteInvincible();
-        Heal();
     }
 
     //FixedUpdate is affected by timescale, whereas Update is not. Update will run every frame regardless of whatever is going on
     private void FixedUpdate()
     {
-        if (pState.dashing) return;
+        if (pState.dashing || pState.healing) return;
         Recoil();
     }
 
@@ -188,6 +195,7 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
+        if (pState.healing) rb.velocity = new Vector2(0, 0);
         //Will move the character horizontally at walkSpeed without changing vertical speed
         rb.velocity = new Vector2(walkSpeed * xAxis, rb.velocity.y);
         //anim.SetBool("Walking", rb.velocity.x != 0 && Grounded());
@@ -268,6 +276,18 @@ public class PlayerController : MonoBehaviour
         //Goes through list of objectsToHit
         for (int i = 0; i < objectsToHit.Length; i++)
         {
+            Enemy e = objectsToHit[i].GetComponent<Enemy>();
+            if (e && !hitEnemies.Contains(e))
+            {
+                e.EnemyHit(damage, (transform.position - objectsToHit[i].transform.position).normalized, _recoilStrength);
+                hitEnemies.Add(e);
+
+                if (objectsToHit[i].CompareTag("Enemy"))
+                {
+                    Mana += manaGain;
+                }
+            }
+            /*
             //If there IS an enemy to hit (aka list is NOT null), we do damage and knockback to them
             if (objectsToHit[i].GetComponent<Enemy>() != null)
             {
@@ -282,8 +302,15 @@ public class PlayerController : MonoBehaviour
                 {
                     e.EnemyHit(damage, (transform.position - objectsToHit[i].transform.position).normalized, _recoilStrength);
                     hitEnemies.Add(e);
+
+                    //If what we hit is an enemy, we regain some mana
+                    if (objectsToHit[i].CompareTag("Enemy"))
+                    {
+                        Mana += manaGain;
+                    }
                 }
             }
+            */
         }
     }
 
@@ -371,13 +398,17 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(float _damage)
     {
+        Debug.Log("TakeDamage Running");
         Health -= Mathf.RoundToInt(_damage);
+        Debug.Log("Damage dealt");
         StartCoroutine(StopTakingDamage());
+        Debug.Log("Coroutine started");
     }
 
     //Our iframes that trigger once we get hurt
     IEnumerator StopTakingDamage()
     {
+        Debug.Log("StopTakingDamage Running");
         pState.invincible = true;
         GameObject _bloodSpurtParticles = Instantiate(bloodSpurt, transform.position, Quaternion.identity);
         Destroy(_bloodSpurtParticles, 1.5f);
@@ -387,18 +418,19 @@ public class PlayerController : MonoBehaviour
     }
 
     //Goes from white to black to white again and again so long as parameters are fulfilled
-    void FlashWhiteInvincible()
+    void FlashWhileInvincible()
     {
         sr.material.color = pState.invincible ? Color.Lerp(Color.white, Color.black, Mathf.PingPong(Time.time * hitFlashSpeed, 1.0f)) : Color.white;
     }
 
     void RestoreTimeScale()
     {
+        Debug.Log("RestoreTimeScale Running");
         if (restoreTime)
         {
             if (Time.timeScale < 1)
             {
-                Time.timeScale += Time.deltaTime * restoreTimeSpeed;
+                Time.timeScale += Time.unscaledDeltaTime * restoreTimeSpeed;
             }
             else
             {
@@ -409,11 +441,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void HitStartTime(float _newTimeScale, int _restoreSpeed, float _delay)
+    public void HitStopTime(float _newTimeScale, int _restoreSpeed, float _delay)
     {
+        Debug.Log("HitStopTime Running");
         //Allows for the restore time speed to be different depending on the enemy that attacks the player
         restoreTimeSpeed = _restoreSpeed;
-        Time.timeScale = _newTimeScale;
+        //Time.timeScale = _newTimeScale;
         //If we have been attacked
         if (_delay > 0)
         {
@@ -424,16 +457,18 @@ public class PlayerController : MonoBehaviour
         {
             restoreTime = true;
         }
+
+        Time.timeScale = _newTimeScale;
     }
 
     IEnumerator StartTimeAgain(float _delay)
     {
+        yield return new WaitForSecondsRealtime(_delay);
         restoreTime = true;
-        yield return new WaitForSeconds(_delay);
     }
 
     //Makes Health a Property and lets us get and set health as needed (health and Health are different in this case)
-    public int Health
+    int Health
     {
         get { return health; }
         set
@@ -442,17 +477,34 @@ public class PlayerController : MonoBehaviour
             {
                 health = Mathf.Clamp(value, 0, maxHealth);
 
+                /* Commenting this out for now. This will be used for our hearts UI. Since we don't have the assets right now,
+                 * this is causing everything to stop progressing past this point, causing our enemy infinite damage bug
+                 * as well as our instant heal bug
                 if (onHealthChangedCallBack != null)
                 {
                     onHealthChangedCallBack.Invoke();
                 }
+                */
+            }
+        }
+    }
+
+    float Mana
+    {
+        get { return mana; }
+        set
+        {
+            //if mana stats change
+            if (mana != value)
+            {
+                mana = Mathf.Clamp(value, 0, 1);
             }
         }
     }
 
     void Heal()
     {
-        if (Input.GetButton("Healing") && Health < maxHealth && !pState.jumping && !pState.dashing)
+        if (Input.GetButton("Healing") && Health < maxHealth && Grounded() && Mana > 0 && !pState.jumping && !pState.dashing)
         {
             pState.healing = true;
             //anim.SetBool("Healing", true);
@@ -463,6 +515,9 @@ public class PlayerController : MonoBehaviour
                 Health++;
                 healTimer = 0;
             }
+
+            //drain mana while healing
+            Mana -= Time.deltaTime * manaDrainSpeed;
         }
         else
         {

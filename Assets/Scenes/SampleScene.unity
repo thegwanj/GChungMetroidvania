@@ -1084,7 +1084,11 @@ MonoBehaviour:
   health: 0
   maxHealth: 100
   bloodSpurt: {fileID: 9073370888522632945, guid: b45bfe6fa6abc6748a91c27863e68393, type: 3}
-  hitFlashSpeed: 0
+  hitFlashSpeed: 2
+  timeToHeal: 1
+  mana: 1
+  manaDrainSpeed: 0.2
+  manaGain: 0.3
   pState: {fileID: 0}
 --- !u!114 &1708398150
 MonoBehaviour:
@@ -1104,6 +1108,7 @@ MonoBehaviour:
   recoilingY: 0
   lookingRight: 0
   invincible: 0
+  healing: 0
 --- !u!1 &1711944925
 GameObject:
   m_ObjectHideFlags: 0
@@ -1116,41 +1121,14 @@ GameObject:
   - component: {fileID: 1711944931}
   - component: {fileID: 1711944928}
   - component: {fileID: 1711944927}
-  - component: {fileID: 1711944926}
   - component: {fileID: 1711944932}
   m_Layer: 6
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!61 &1711944926
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1711944925}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.00000011920929, y: -0.046506017}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.8139918, y: 0.90698797}
-  m_EdgeRadius: 0
 --- !u!50 &1711944927
 Rigidbody2D:
   serializedVersion: 4
@@ -1268,7 +1246,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
