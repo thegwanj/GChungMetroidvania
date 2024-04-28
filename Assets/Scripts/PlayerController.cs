@@ -88,6 +88,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float manaDrainSpeed;
     [SerializeField] private float manaGain;
 
+    private float castOrHealTimer;
+
     //Reference the PlayerStateList
     [HideInInspector] public PlayerStateList pState;
     //private Animator anim;
@@ -114,8 +116,8 @@ public class PlayerController : MonoBehaviour
         {
             Instance = this;
         }
+        DontDestroyOnLoad(gameObject);
 
-        Health = maxHealth;
     }
 
     void Start()
@@ -131,6 +133,7 @@ public class PlayerController : MonoBehaviour
         gravity = rb.gravityScale;
 
         Mana = mana;
+        Health = maxHealth;
     }
 
     private void OnDrawGizmos()
@@ -174,6 +177,15 @@ public class PlayerController : MonoBehaviour
         yAxis = Input.GetAxisRaw("Vertical");
         //Gets the attack input
         attack = Input.GetButtonDown("Attack");
+
+        if (Input.GetButton("Cast/Heal"))
+        {
+            castOrHealTimer += Time.deltaTime;
+        }
+        else
+        {
+            castOrHealTimer = 0;
+        }
     }
 
     void Flip()
@@ -222,7 +234,8 @@ public class PlayerController : MonoBehaviour
         pState.dashing = true;
         //anim.SetTrigger("Dashing");
         rb.gravityScale = 0;
-        rb.velocity = new Vector2(transform.localScale.x * dashSpeed, 0);
+        int _dir = pState.lookingRight ? 1 : -1;
+        rb.velocity = new Vector2(_dir * dashSpeed, 0);
         //Will play the dash effect while dashing on the ground
         //if (Grounded()) Instantiate(dashEffect, transform);
         yield return new WaitForSeconds(dashTime);
@@ -480,11 +493,11 @@ public class PlayerController : MonoBehaviour
                 /* Commenting this out for now. This will be used for our hearts UI. Since we don't have the assets right now,
                  * this is causing everything to stop progressing past this point, causing our enemy infinite damage bug
                  * as well as our instant heal bug
+                 */
                 if (onHealthChangedCallBack != null)
                 {
                     onHealthChangedCallBack.Invoke();
                 }
-                */
             }
         }
     }
@@ -504,7 +517,7 @@ public class PlayerController : MonoBehaviour
 
     void Heal()
     {
-        if (Input.GetButton("Healing") && Health < maxHealth && Grounded() && Mana > 0 && !pState.jumping && !pState.dashing)
+        if (Input.GetButton("Cast/Heal") && castOrHealTimer > 0.05f && Health < maxHealth && Grounded() && Mana > 0 && !pState.jumping && !pState.dashing)
         {
             pState.healing = true;
             //anim.SetBool("Healing", true);
@@ -544,32 +557,30 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
+        //Jumps if buffer counter is greater than 0 AND Grounded
+        if (jumpBufferCounter > 0 && coyoteTimeCounter > 0 && !pState.jumping)
+        {
+            rb.velocity = new Vector3(rb.velocity.x, jumpForce);
+
+            pState.jumping = true;
+        }
+        
+        if (!Grounded() && airJumpCounter < maxAirJumps && Input.GetButtonDown("Jump"))
+        {
+            pState.jumping = true;
+
+            airJumpCounter++;
+
+            rb.velocity = new Vector3(rb.velocity.x, jumpForce);
+        }
+
         //Allows to cancel jump while already jumping upwards
         //AKA variable jump height
-        if(Input.GetButtonUp("Jump") && rb.velocity.y > 0)
+        if (Input.GetButtonUp("Jump") && rb.velocity.y > 3)
         {
             rb.velocity = new Vector2(rb.velocity.x, 0);
 
             pState.jumping = false;
-        }
-
-        if (!pState.jumping)
-        {
-            //Jumps if buffer counter is greater than 0 AND Grounded
-            if (jumpBufferCounter > 0 && coyoteTimeCounter > 0)
-            {
-                rb.velocity = new Vector3(rb.velocity.x, jumpForce);
-
-                pState.jumping = true;
-            }
-            else if (!Grounded() && airJumpCounter < maxAirJumps && Input.GetButtonDown("Jump"))
-            {
-                pState.jumping = true;
-
-                airJumpCounter++;
-
-                rb.velocity = new Vector3(rb.velocity.x, jumpForce);
-            }
         }
 
         //anim.SetBool("Jumping", !Grounded());

@@ -5,16 +5,11 @@ using UnityEngine;
 //Inherits Enemy functions and variables
 public class Zombie : Enemy
 {
-    // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
+        //Calls the Start function from its base class
+        base.Start();
         rb.gravityScale = 12f;
-    }
-
-    protected override void Awake()
-    {
-        //Calls the Awake function from its base class
-        base.Awake();
     }
 
     // Update is called once per frame
