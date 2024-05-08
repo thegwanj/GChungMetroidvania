@@ -92,7 +92,7 @@ public class PlayerController : MonoBehaviour
 
     //Reference the PlayerStateList
     [HideInInspector] public PlayerStateList pState;
-    //private Animator anim;
+    Animator anim;
     //Will be accessible by all our scripts
     public static PlayerController Instance;
     private Rigidbody2D rb;
@@ -128,7 +128,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
 
-        //anim = GetComponent<Animator>();
+        anim = GetComponent<Animator>();
 
         gravity = rb.gravityScale;
 
@@ -191,15 +191,16 @@ public class PlayerController : MonoBehaviour
     void Flip()
     {
         //Flips the sprite based on movement direction
+        //Setting the x in the Vector2 to 3 because of how our model is scaled
         if (xAxis < 0)
         {
-            transform.localScale = new Vector2(-1, transform.localScale.y);
+            transform.localScale = new Vector2(-3, transform.localScale.y);
 
             pState.lookingRight = false;
         }
         else if (xAxis > 0)
         {
-            transform.localScale = new Vector2(1, transform.localScale.y);
+            transform.localScale = new Vector2(3, transform.localScale.y);
 
             pState.lookingRight = true;
         }
@@ -210,7 +211,7 @@ public class PlayerController : MonoBehaviour
         if (pState.healing) rb.velocity = new Vector2(0, 0);
         //Will move the character horizontally at walkSpeed without changing vertical speed
         rb.velocity = new Vector2(walkSpeed * xAxis, rb.velocity.y);
-        //anim.SetBool("Walking", rb.velocity.x != 0 && Grounded());
+        anim.SetBool("Walking", rb.velocity.x != 0 && Grounded());
     }
 
     void StartDash()
@@ -232,7 +233,7 @@ public class PlayerController : MonoBehaviour
     {
         canDash = false;
         pState.dashing = true;
-        //anim.SetTrigger("Dashing");
+        anim.SetTrigger("Dashing");
         rb.gravityScale = 0;
         int _dir = pState.lookingRight ? 1 : -1;
         rb.velocity = new Vector2(_dir * dashSpeed, 0);
@@ -252,7 +253,7 @@ public class PlayerController : MonoBehaviour
         if (attack && timeSinceAttack >= timeBetweenAttack)
         {
             timeSinceAttack = 0;
-            //anim.SetTrigger("Attacking")
+            anim.SetTrigger("Attacking");
 
             //Sets the default attack for if the player is attacking to the side or attacking while grounded
             if (yAxis == 0 || yAxis < 0 && Grounded())
@@ -278,13 +279,6 @@ public class PlayerController : MonoBehaviour
     {
         Collider2D[] objectsToHit = Physics2D.OverlapBoxAll(_attackTransform.position, _attackArea, 0, attackableLayer);
         List<Enemy> hitEnemies = new List<Enemy>();
-
-        //Runs the log if there is actually anything to hit in our areas
-        if (objectsToHit.Length > 0)
-        {
-            //Debug.Log("Hit!");
-            _recoilDir = true;
-        }
 
         //Goes through list of objectsToHit
         for (int i = 0; i < objectsToHit.Length; i++)
@@ -323,7 +317,15 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-            */
+            */            
+        }
+
+        //Runs the log if there is actually anything to hit in our areas
+        //Sets our recoil direction to true, causing recoil
+        if (objectsToHit.Length > 0)
+        {
+            //Debug.Log("Hit!");
+            _recoilDir = true;
         }
     }
 
@@ -583,7 +585,7 @@ public class PlayerController : MonoBehaviour
             pState.jumping = false;
         }
 
-        //anim.SetBool("Jumping", !Grounded());
+        anim.SetBool("Jumping", !Grounded());
     }
 
     void UpdateJumpVariables()
