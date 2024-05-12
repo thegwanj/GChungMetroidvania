@@ -975,13 +975,13 @@ TextureImporter:
       name: Warrior_Sheet-Effect_26
       rect:
         serializedVersion: 2
-        x: 138
-        y: 528
-        width: 69
-        height: 44
+        x: 152
+        y: 529
+        width: 23
+        height: 33
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 14, y: 1, z: 32, w: 10}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -996,13 +996,13 @@ TextureImporter:
       name: Warrior_Sheet-Effect_27
       rect:
         serializedVersion: 2
-        x: 207
-        y: 528
-        width: 69
-        height: 44
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+        x: 216
+        y: 531
+        width: 31
+        height: 37
+      alignment: 9
+      pivot: {x: 0.5, y: 0.45}
+      border: {x: 9, y: 3, z: 29, w: 4}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1017,13 +1017,13 @@ TextureImporter:
       name: Warrior_Sheet-Effect_28
       rect:
         serializedVersion: 2
-        x: 276
-        y: 528
-        width: 69
-        height: 44
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+        x: 281
+        y: 530
+        width: 38
+        height: 42
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 5, y: 2, z: 26, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1038,13 +1038,13 @@ TextureImporter:
       name: Warrior_Sheet-Effect_29
       rect:
         serializedVersion: 2
-        x: 345
-        y: 528
-        width: 69
-        height: 44
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+        x: 349
+        y: 533
+        width: 37
+        height: 39
+      alignment: 9
+      pivot: {x: 0.5, y: 0.43}
+      border: {x: 4, y: 5, z: 28, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1059,13 +1059,13 @@ TextureImporter:
       name: Warrior_Sheet-Effect_30
       rect:
         serializedVersion: 2
-        x: 0
-        y: 484
-        width: 69
-        height: 44
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+        x: 4
+        y: 485
+        width: 39
+        height: 38
+      alignment: 9
+      pivot: {x: 0.5, y: 0.45}
+      border: {x: 4, y: 1, z: 26, w: 5}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1080,13 +1080,13 @@ TextureImporter:
       name: Warrior_Sheet-Effect_31
       rect:
         serializedVersion: 2
-        x: 69
-        y: 484
-        width: 69
-        height: 44
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+        x: 73
+        y: 485
+        width: 41
+        height: 37
+      alignment: 9
+      pivot: {x: 0.5, y: 0.45}
+      border: {x: 4, y: 1, z: 24, w: 6}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1101,13 +1101,13 @@ TextureImporter:
       name: Warrior_Sheet-Effect_32
       rect:
         serializedVersion: 2
-        x: 138
-        y: 484
-        width: 69
-        height: 44
-      alignment: 0
+        x: 140
+        y: 485
+        width: 40
+        height: 33
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 2, y: 1, z: 27, w: 11}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1122,13 +1122,13 @@ TextureImporter:
       name: Warrior_Sheet-Effect_33
       rect:
         serializedVersion: 2
-        x: 207
-        y: 484
-        width: 69
-        height: 44
+        x: 208
+        y: 485
+        width: 41
+        height: 33
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 1, y: 1, z: 29, w: 12}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1144,12 +1144,12 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 276
-        y: 484
-        width: 69
-        height: 44
+        y: 485
+        width: 43
+        height: 33
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 1, y: 1, z: 26, w: 21}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1165,12 +1165,12 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 345
-        y: 484
-        width: 69
-        height: 44
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+        y: 485
+        width: 41
+        height: 33
+      alignment: 9
+      pivot: {x: 0.52, y: 0.5}
+      border: {x: 1, y: 1, z: 28, w: 24}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1185,13 +1185,13 @@ TextureImporter:
       name: Warrior_Sheet-Effect_36
       rect:
         serializedVersion: 2
-        x: 0
-        y: 440
-        width: 69
-        height: 44
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+        x: 1
+        y: 441
+        width: 40
+        height: 33
+      alignment: 9
+      pivot: {x: 0.51, y: 0.5}
+      border: {x: 1, y: 1, z: 28, w: 25}
       outline: []
       physicsShape: []
       tessellationDetail: 0

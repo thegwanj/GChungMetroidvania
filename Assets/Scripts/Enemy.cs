@@ -63,10 +63,11 @@ public class Enemy : MonoBehaviour
     {
         if (_other.gameObject.CompareTag("Player") && !PlayerController.Instance.pState.invincible)
         {
-            Debug.Log("OnCollisionStay2D Triggered");
             Attack();
-            Debug.Log("Enemy Attack Ran");
-            PlayerController.Instance.HitStopTime(0, 5, 0.5f);
+            if (PlayerController.Instance.pState.alive)
+            {
+                PlayerController.Instance.HitStopTime(0, 5, 0.5f);
+            }
         }
     }
 

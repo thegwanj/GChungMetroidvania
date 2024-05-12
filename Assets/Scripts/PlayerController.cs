@@ -117,7 +117,6 @@ public class PlayerController : MonoBehaviour
             Instance = this;
         }
         DontDestroyOnLoad(gameObject);
-
     }
 
     void Start()
@@ -147,19 +146,31 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GetInputs();
+        if (Input.GetButtonDown("Interact"))
+        {
+            Debug.Log("Interacting");
+        }
+        if (pState.cutscene) return;
+        Debug.Log(pState.alive.ToString());
+        if (pState.alive)
+        {
+            GetInputs();
+        }
         UpdateJumpVariables();
+        RestoreTimeScale();
         //Movement does not get called if we are in the middle of dashing
         if (pState.dashing) return;
-        RestoreTimeScale();
-        FlashWhileInvincible();
-        Move();
-        Heal();
+        if (pState.alive)
+        {
+            Move();
+            Heal();
+            Flip();
+            Jump();
+            StartDash();
+            Attack();
+        }
         if (pState.healing) return;
-        Flip();
-        Jump();
-        StartDash();
-        Attack();
+        FlashWhileInvincible();
     }
 
     //FixedUpdate is affected by timescale, whereas Update is not. Update will run every frame regardless of whatever is going on
@@ -244,6 +255,27 @@ public class PlayerController : MonoBehaviour
         pState.dashing = false;
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
+    }
+
+    public IEnumerator WalkIntoANewScene(Vector2 _exitDir, float _delay)
+    {
+        //If exit direction is upwards
+        if(_exitDir.y > 0)
+        {
+            rb.velocity = jumpForce * _exitDir;
+        }
+
+        //If exit direction requires horizontal movement
+        if(_exitDir.x != 0)
+        {
+            xAxis = _exitDir.x > 0 ? 1 : -1;
+
+            Move();
+        }
+
+        Flip();
+        yield return new WaitForSeconds(_delay);
+        pState.cutscene = false;
     }
 
     void Attack()
@@ -413,11 +445,20 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(float _damage)
     {
-        Debug.Log("TakeDamage Running");
-        Health -= Mathf.RoundToInt(_damage);
-        Debug.Log("Damage dealt");
-        StartCoroutine(StopTakingDamage());
-        Debug.Log("Coroutine started");
+        if (pState.alive)
+        {
+            Health -= Mathf.RoundToInt(_damage);
+
+            if(Health <= 0)
+            {
+                Health = 0;
+                StartCoroutine(Death());
+            }
+            else
+            {
+                StartCoroutine(StopTakingDamage());
+            }
+        }
     }
 
     //Our iframes that trigger once we get hurt
@@ -480,6 +521,30 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(_delay);
         restoreTime = true;
+    }
+
+    IEnumerator Death()
+    {
+        pState.alive = false;
+        //Make sure that time stop will not affect us since we got hit
+        Time.timeScale = 1f;
+        GameObject _bloodSpurtParticles = Instantiate(bloodSpurt, transform.position, Quaternion.identity);
+        Destroy(_bloodSpurtParticles, 1.5f);
+        anim.SetTrigger("Death");
+
+        yield return new WaitForSeconds(0.9f);
+        StartCoroutine(UIManager.Instance.ActivateDeathScreen());
+    }
+
+    //Function to handle what happens after respawn
+    public void Respawned()
+    {
+        if (!pState.alive)
+        {
+            pState.alive = true;
+            Health = maxHealth;
+            anim.Play("player_Idle");
+        }
     }
 
     //Makes Health a Property and lets us get and set health as needed (health and Health are different in this case)
