@@ -28,6 +28,11 @@ public class SceneFader : MonoBehaviour
         
     }
 
+    public void CallFadeAndLoadScene(string sceneToLoad)
+    {
+        StartCoroutine(FadeAndLoadScene(FadeDirection.In, sceneToLoad));
+    }
+
     public IEnumerator Fade(FadeDirection _fadeDirection)
     {
         float _alpha = _fadeDirection == FadeDirection.Out ? 1 : 0;

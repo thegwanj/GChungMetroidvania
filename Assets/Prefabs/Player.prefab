@@ -77,6 +77,7 @@ GameObject:
   - component: {fileID: 4093009986572222241}
   - component: {fileID: 4093009986572222246}
   - component: {fileID: 4093009986572222251}
+  - component: {fileID: 473941422152153693}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -174,7 +175,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9e18f8fa98d040145b43f3a148adf419, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -273,6 +274,7 @@ MonoBehaviour:
   invincible: 0
   healing: 0
   cutscene: 0
+  alive: 0
 --- !u!95 &4093009986572222251
 Animator:
   serializedVersion: 5
@@ -294,6 +296,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &473941422152153693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4093009986572222240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a14f1e3564843d4b9a162909cdd5fa2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4093009986796334207
 GameObject:
   m_ObjectHideFlags: 0

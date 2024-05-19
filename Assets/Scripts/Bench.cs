@@ -18,9 +18,9 @@ public class Bench : MonoBehaviour
         
     }
 
-    private void OnTriggerStay(Collider _collision)
+    private void OnTriggerStay(Collider collision)
     {
-        if(_collision.CompareTag("Player") && Input.GetButtonDown("Interact"))
+        if(collision.CompareTag("Player") && Input.GetButtonDown("Interact"))
         {
             interacted = true;
             Debug.Log("Interacted!");

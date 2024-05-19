@@ -28,6 +28,8 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
+        if (GameManager.Instance.gameIsPaused) return;
+
         if(health <= 0)
         {
             Destroy(gameObject);

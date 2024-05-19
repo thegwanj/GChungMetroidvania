@@ -9,7 +9,13 @@ public class GameManager : MonoBehaviour
 
     public Vector2 platformingRespawnPoint;
     public Vector2 respawnPoint;
+    [SerializeField] Vector2 defaultRespawnPoint;
     [SerializeField] Bench bench;
+
+    [Header("Pause Settings")]
+    [SerializeField] private FadeUI pauseMenu;
+    [SerializeField] private float fadeTime;
+    public bool gameIsPaused;
 
     private void Awake()
     {
@@ -23,6 +29,22 @@ public class GameManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
         bench = FindObjectOfType<Bench>();
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape) && !gameIsPaused)
+        {
+            pauseMenu.FadeUIIn(fadeTime);
+            Time.timeScale = 0;
+            gameIsPaused = true;
+        }
+    }
+
+    public void UnpauseGame()
+    {
+        Time.timeScale = 1;
+        gameIsPaused = false;
     }
 
     public void RespawnPlayer()

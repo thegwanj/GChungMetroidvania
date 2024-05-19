@@ -146,12 +146,9 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Interact"))
-        {
-            Debug.Log("Interacting");
-        }
+        if (GameManager.Instance.gameIsPaused) return;
+
         if (pState.cutscene) return;
-        Debug.Log(pState.alive.ToString());
         if (pState.alive)
         {
             GetInputs();
@@ -530,6 +527,11 @@ public class PlayerController : MonoBehaviour
         Time.timeScale = 1f;
         GameObject _bloodSpurtParticles = Instantiate(bloodSpurt, transform.position, Quaternion.identity);
         Destroy(_bloodSpurtParticles, 1.5f);
+        if(pState.dashing)
+        {
+            StopCoroutine(Dash());
+        }
+        rb.velocity = new Vector2(0, 0);
         anim.SetTrigger("Death");
 
         yield return new WaitForSeconds(0.9f);
