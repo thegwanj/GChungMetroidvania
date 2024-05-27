@@ -12,4 +12,10 @@ public class PlayerStateList : MonoBehaviour
     public bool healing;
     public bool cutscene = false;
     public bool alive;
+
+    [Header("Ability Unlocks")]
+    //Tracking unlocked abilities
+    public bool canJump;
+    public bool canDoubleJump;
+    public bool canDash;
 }

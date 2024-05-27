@@ -13,7 +13,7 @@ TagManager:
   - Water
   - UI
   - Attackable
-  - 
+  - No Collisions
   - 
   - 
   - 
@@ -41,4 +41,13 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 1542229501
+    locked: 0
+  - name: Midground
+    uniqueID: 3200452717
+    locked: 0
+  - name: Foreground
+    uniqueID: 2846137453
     locked: 0

@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4093009986095571207}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.1672, z: 0}
+  m_LocalPosition: {x: 0, y: -0.1651, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -72,12 +72,12 @@ GameObject:
   m_Component:
   - component: {fileID: 4093009986572222244}
   - component: {fileID: 4093009986572222245}
-  - component: {fileID: 4093009986572222243}
-  - component: {fileID: 4093009986572222242}
-  - component: {fileID: 4093009986572222241}
   - component: {fileID: 4093009986572222246}
+  - component: {fileID: 4093009986572222243}
+  - component: {fileID: 4093009986572222241}
   - component: {fileID: 4093009986572222251}
   - component: {fileID: 473941422152153693}
+  - component: {fileID: 1155207610437667350}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -123,7 +123,7 @@ MonoBehaviour:
   maxAirJumps: 1
   groundCheckPoint: {fileID: 4093009986095571208}
   groundCheckY: 0.2
-  groundCheckX: 0.4
+  groundCheckX: 0.1
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8
@@ -155,6 +155,30 @@ MonoBehaviour:
   manaDrainSpeed: 0.2
   manaGain: 0.3
   pState: {fileID: 0}
+--- !u!114 &4093009986572222246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4093009986572222240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 356da5998b836314e98fbd89852c6ff9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumping: 0
+  dashing: 0
+  recoilingX: 0
+  recoilingY: 0
+  lookingRight: 0
+  invincible: 0
+  healing: 0
+  cutscene: 0
+  alive: 0
+  canJump: 0
+  canDoubleJump: 0
+  canDash: 0
 --- !u!212 &4093009986572222243
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -207,32 +231,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &4093009986572222242
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4093009986572222240}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.0002856888, y: -0.008647621}
-  m_SpriteTilingProperty:
-    border: {x: 0.17999999, y: 0.01, z: 0.32999998, w: 0.099999994}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.18, y: 0.33}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.16189846, y: 0.2961843}
-  m_EdgeRadius: 0
 --- !u!50 &4093009986572222241
 Rigidbody2D:
   serializedVersion: 4
@@ -254,27 +252,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &4093009986572222246
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4093009986572222240}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 356da5998b836314e98fbd89852c6ff9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  jumping: 0
-  dashing: 0
-  recoilingX: 0
-  recoilingY: 0
-  lookingRight: 0
-  invincible: 0
-  healing: 0
-  cutscene: 0
-  alive: 0
 --- !u!95 &4093009986572222251
 Animator:
   serializedVersion: 5
@@ -308,6 +285,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a14f1e3564843d4b9a162909cdd5fa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!70 &1155207610437667350
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4093009986572222240}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.00046920776, y: -0.0028152466}
+  m_Size: {x: 0.16404662, y: 0.31498525}
+  m_Direction: 0
 --- !u!1 &4093009986796334207
 GameObject:
   m_ObjectHideFlags: 0

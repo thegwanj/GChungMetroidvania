@@ -224,7 +224,7 @@ public class PlayerController : MonoBehaviour
 
     void StartDash()
     {
-        if (Input.GetButtonDown("Dash") && canDash && !dashed)
+        if (Input.GetButtonDown("Dash") && canDash && !dashed && pState.canDash)
         {
             StartCoroutine(Dash());
             dashed = true;
@@ -496,7 +496,6 @@ public class PlayerController : MonoBehaviour
 
     public void HitStopTime(float _newTimeScale, int _restoreSpeed, float _delay)
     {
-        Debug.Log("HitStopTime Running");
         //Allows for the restore time speed to be different depending on the enemy that attacks the player
         restoreTimeSpeed = _restoreSpeed;
         //Time.timeScale = _newTimeScale;
@@ -627,14 +626,15 @@ public class PlayerController : MonoBehaviour
     void Jump()
     {
         //Jumps if buffer counter is greater than 0 AND Grounded
-        if (jumpBufferCounter > 0 && coyoteTimeCounter > 0 && !pState.jumping)
+        if (jumpBufferCounter > 0 && coyoteTimeCounter > 0 && !pState.jumping && pState.canJump)
         {
             rb.velocity = new Vector3(rb.velocity.x, jumpForce);
 
             pState.jumping = true;
         }
         
-        if (!Grounded() && airJumpCounter < maxAirJumps && Input.GetButtonDown("Jump"))
+        //Double jump
+        if (!Grounded() && airJumpCounter < maxAirJumps && Input.GetButtonDown("Jump") && pState.canDoubleJump)
         {
             pState.jumping = true;
 
