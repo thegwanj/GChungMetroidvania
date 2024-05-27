@@ -3,6 +3,34 @@
 
 ## Documentation and Updates
 
+### May 26, 2024
+#### Features Added/Updated Since Last Update
+- Added in Main Menu
+- Added in Options Menu
+- Added in Credits
+- Added in Quit Game option on the main menu
+- Added pause/resume function
+- Added option to return to main menu while paused
+- Added Forest_1 scene
+    - Added in parallax background
+    - Added in forest environment via tilemap
+- Added in ability unlocks
+- Added camera bounds so that the camera could only move so far in a level
+- Modified player collider from box to capsule
+- Replaced default material for all assets to include a new default which can handle lighting
+- Changed first playable scene to load from SampleScene to Forest_1
+
+#### Issues Encountered
+- Player script would not recognize tiles as being on the ground and would constantly play the jumping animation. Fixed by changing Composite Collider 2d geometry shape from Outline to Polygons
+- Player would sometimes get caught on an edge where two tiles meet. Fixed by changing collider on player from box to capsule
+- Player character will continue moving in the direction they died in. Mostly fixed by manually overriding movement/velocity when hitting 0hp. Dashing and dying will still cause the character to continue moving in the direction they died in
+- Player could jump infinitely if they were pressed against a wall. Fixed by shrinking area script uses for finding the ground
+
+#### Lessons Learned
+- Small changes to just the camera can make a very large difference in how things are viewed by the player
+- Ability unlocks were more or less just a series of booleans and I was very much overthinking it
+- It's important to double-check variables and components after moving onto the next "phase" of the project because it's easy to forget that some settings were meant to be temporary and not changing/removing them will cause more issues down the line
+
 ### May 12, 2024
 #### Features Added/Updated Since Last Update
 - Added mana regeneration via attacking enemies
