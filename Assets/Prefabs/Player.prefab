@@ -77,7 +77,7 @@ GameObject:
   - component: {fileID: 4093009986572222241}
   - component: {fileID: 4093009986572222251}
   - component: {fileID: 473941422152153693}
-  - component: {fileID: 1155207610437667350}
+  - component: {fileID: 7389202978124223377}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -117,7 +117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 15
-  jumpForce: 35
+  jumpForce: 30
   jumpBufferFrames: 8
   coyoteTime: 0.1
   maxAirJumps: 1
@@ -127,7 +127,7 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8
-  dashSpeed: 50
+  dashSpeed: 35
   dashTime: 0.2
   dashCooldown: 0.35
   dashEffect: {fileID: 0}
@@ -147,7 +147,7 @@ MonoBehaviour:
   recoilXSpeed: 20
   recoilYSpeed: 25
   health: 0
-  maxHealth: 10
+  maxHealth: 5
   bloodSpurt: {fileID: 9073370888522632945, guid: b45bfe6fa6abc6748a91c27863e68393, type: 3}
   hitFlashSpeed: 2
   timeToHeal: 1
@@ -175,7 +175,7 @@ MonoBehaviour:
   invincible: 0
   healing: 0
   cutscene: 0
-  alive: 0
+  alive: 1
   canJump: 0
   canDoubleJump: 0
   canDash: 0
@@ -217,9 +217,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -1094514579
+  m_SortingLayer: 2
+  m_SortingOrder: 3
   m_Sprite: {fileID: -3318188226485093758, guid: 5eef5d20457353f479f72ecf04bc3b79, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -285,8 +285,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a14f1e3564843d4b9a162909cdd5fa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!70 &1155207610437667350
-CapsuleCollider2D:
+--- !u!61 &7389202978124223377
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -298,9 +298,19 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.00046920776, y: -0.0028152466}
-  m_Size: {x: 0.16404662, y: 0.31498525}
-  m_Direction: 0
+  m_Offset: {x: -0.000000059604645, y: -0.007184185}
+  m_SpriteTilingProperty:
+    border: {x: 0.17999999, y: 0.01, z: 0.32999998, w: 0.099999994}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.18, y: 0.33}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.15924582, y: 0.3076493}
+  m_EdgeRadius: 0
 --- !u!1 &4093009986796334207
 GameObject:
   m_ObjectHideFlags: 0
