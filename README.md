@@ -3,6 +3,22 @@
 
 ## Documentation and Updates
 
+### June 9, 2024
+#### Features Added/Updated Since Last Update
+- Added Forest_2 scene
+    - Added Dash ability unlock
+- Added Cave_1 scene
+- Reverted player collider to box since capsule was making the character physics behave differently than intended
+- Added Forest_2 and Cave_1 to build
+
+#### Issues Encountered
+- Pause/resume was only working on certain scenes. Fixed by making sure each scene had an EventSystem in place
+- Player could occasionally fall through platforms and walls even if tilemap colliders were touching. Fixed by placing an additional invisible wall collider in the gaps
+
+#### Lessons Learned
+- Level design should NOT be done blind. It is very handy to have a plan in place before starting to build or else there will be a lot of back tracking and rebuilding of levels
+- Levels take a long time to make. I greatly underestimated how long it would take to get just one level done, and now I have 2-3 more to go. Time management will be key as we start wrapping up the project
+
 ### May 26, 2024
 #### Features Added/Updated Since Last Update
 - Added in Main Menu
