@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AbilityUnlock : MonoBehaviour
 {
-    public bool unlockJump, unlockDoubleJump, unlockDash;
+    public bool unlockJump, unlockDoubleJump, unlockDash, unlockHeal;
     bool used;
 
     private void Start()
@@ -20,6 +20,11 @@ public class AbilityUnlock : MonoBehaviour
         }
         
         if(unlockDash && PlayerController.Instance.pState.canDash)
+        {
+            Destroy(gameObject);
+        }
+
+        if (unlockHeal && PlayerController.Instance.pState.canHeal)
         {
             Destroy(gameObject);
         }
@@ -42,6 +47,11 @@ public class AbilityUnlock : MonoBehaviour
             if (unlockDash)
             {
                 PlayerController.Instance.pState.canDash = true;
+            }
+
+            if (unlockHeal)
+            {
+                PlayerController.Instance.pState.canHeal = true;
             }
             
             Destroy(gameObject);

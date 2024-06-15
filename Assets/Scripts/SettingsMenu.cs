@@ -30,7 +30,7 @@ public class SettingsMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        AudioManager.instance.PlayMainMenuMusic();
     }
 
     // Update is called once per frame

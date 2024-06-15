@@ -5,6 +5,7 @@ using UnityEngine;
 //Base enemy script. Other enemy types will go off of this one
 public class Enemy : MonoBehaviour
 {
+    [Header ("Main Settings")]
     //Making variables protected so that subclasses can use it
     [SerializeField] protected float health;
     [SerializeField] protected float recoilLength;
@@ -13,7 +14,7 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] protected PlayerController player;
     [SerializeField] protected float speed;
-
+    [SerializeField] protected float jumpForce;
     [SerializeField] protected float damage;
 
     protected float recoilTimer;

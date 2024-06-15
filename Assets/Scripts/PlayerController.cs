@@ -585,25 +585,28 @@ public class PlayerController : MonoBehaviour
 
     void Heal()
     {
-        if (Input.GetButton("Cast/Heal") && castOrHealTimer > 0.05f && Health < maxHealth && Grounded() && Mana > 0 && !pState.jumping && !pState.dashing)
+        if (pState.canHeal)
         {
-            pState.healing = true;
-            //anim.SetBool("Healing", true);
-
-            healTimer += Time.deltaTime;
-            if(healTimer >= timeToHeal)
+            if (Input.GetButton("Cast/Heal") && castOrHealTimer > 0.05f && Health < maxHealth && Grounded() && Mana > 0 && !pState.jumping && !pState.dashing)
             {
-                Health++;
+                pState.healing = true;
+                //anim.SetBool("Healing", true);
+
+                healTimer += Time.deltaTime;
+                if (healTimer >= timeToHeal)
+                {
+                    Health++;
+                    healTimer = 0;
+                }
+
+                //drain mana while healing
+                Mana -= Time.deltaTime * manaDrainSpeed;
+            }
+            else
+            {
+                pState.healing = false;
                 healTimer = 0;
             }
-
-            //drain mana while healing
-            Mana -= Time.deltaTime * manaDrainSpeed;
-        }
-        else
-        {
-            pState.healing = false;
-            healTimer = 0;
         }
     }
 

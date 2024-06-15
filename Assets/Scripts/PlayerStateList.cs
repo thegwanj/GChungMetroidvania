@@ -18,4 +18,5 @@ public class PlayerStateList : MonoBehaviour
     public bool canJump;
     public bool canDoubleJump;
     public bool canDash;
+    public bool canHeal;
 }
