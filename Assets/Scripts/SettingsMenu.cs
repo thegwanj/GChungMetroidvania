@@ -32,10 +32,4 @@ public class SettingsMenu : MonoBehaviour
     {
         AudioManager.instance.PlayMainMenuMusic();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

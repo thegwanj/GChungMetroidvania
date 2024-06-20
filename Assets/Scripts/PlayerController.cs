@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -95,13 +96,15 @@ public class PlayerController : MonoBehaviour
     Animator anim;
     //Will be accessible by all our scripts
     public static PlayerController Instance;
-    private Rigidbody2D rb;
+    public Rigidbody2D rb;
     private SpriteRenderer sr;
     //Helps get directional input from player
     private float xAxis, yAxis;
     //Variables to be used to modify timescale
     private bool restoreTime;
     private float restoreTimeSpeed;
+
+    private bool canFlash;
 
     //Is called before the Start function
     private void Awake()
@@ -115,6 +118,19 @@ public class PlayerController : MonoBehaviour
         else
         {
             Instance = this;
+
+            //Sets our values if none were loaded
+            Mana = mana;
+            Health = maxHealth;
+
+            //For when we load a game and pState has not yet been instantiated
+            if (pState == null)
+            {
+                pState = GetComponent<PlayerStateList>();
+            } if (pState == null)
+            {
+                pState = gameObject.AddComponent<PlayerStateList>();
+            }
         }
         DontDestroyOnLoad(gameObject);
     }
@@ -131,8 +147,7 @@ public class PlayerController : MonoBehaviour
 
         gravity = rb.gravityScale;
 
-        Mana = mana;
-        Health = maxHealth;
+
     }
 
     private void OnDrawGizmos()
@@ -257,13 +272,13 @@ public class PlayerController : MonoBehaviour
     public IEnumerator WalkIntoANewScene(Vector2 _exitDir, float _delay)
     {
         //If exit direction is upwards
-        if(_exitDir.y > 0)
+        if (_exitDir.y > 0)
         {
             rb.velocity = jumpForce * _exitDir;
         }
 
         //If exit direction requires horizontal movement
-        if(_exitDir.x != 0)
+        if (_exitDir.x != 0)
         {
             xAxis = _exitDir.x > 0 ? 1 : -1;
 
@@ -295,7 +310,7 @@ public class PlayerController : MonoBehaviour
             {
                 Hit(UpAttackTransform, UpAttackArea, ref pState.recoilingY, recoilYSpeed);
                 //SlashEffectAtAngle(slashEffect, 90, UpAttackTransform);
-            } 
+            }
             else if (yAxis < 0 && !Grounded())
             {
                 Hit(DownAttackTransform, DownAttackArea, ref pState.recoilingY, recoilYSpeed);
@@ -346,7 +361,7 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-            */            
+            */
         }
 
         //Runs the log if there is actually anything to hit in our areas
@@ -433,7 +448,7 @@ public class PlayerController : MonoBehaviour
         stepsXRecoiled = 0;
         pState.recoilingX = false;
     }
-    
+
     void StopRecoilY()
     {
         stepsYRecoiled = 0;
@@ -446,7 +461,7 @@ public class PlayerController : MonoBehaviour
         {
             Health -= Mathf.RoundToInt(_damage);
 
-            if(Health <= 0)
+            if (Health <= 0)
             {
                 Health = 0;
                 StartCoroutine(Death());
@@ -461,7 +476,7 @@ public class PlayerController : MonoBehaviour
     //Our iframes that trigger once we get hurt
     IEnumerator StopTakingDamage()
     {
-        Debug.Log("StopTakingDamage Running");
+        //Debug.Log("StopTakingDamage Running");
         pState.invincible = true;
         GameObject _bloodSpurtParticles = Instantiate(bloodSpurt, transform.position, Quaternion.identity);
         Destroy(_bloodSpurtParticles, 1.5f);
@@ -470,7 +485,32 @@ public class PlayerController : MonoBehaviour
         pState.invincible = false;
     }
 
+    /*
+    IEnumerator Flash()
+    {
+        sr.enabled = !sr.enabled;
+        canFlash = false;
+        yield return new WaitForSeconds(0.1f);
+        canFlash = true;
+    }
+
     //Goes from white to black to white again and again so long as parameters are fulfilled
+    void FlashWhileInvincible()
+    {
+        if (pState.invincible)
+        {
+            if(Time.timeScale > 0.2 && canFlash)
+            {
+                StartCoroutine(Flash());
+            }
+        }
+        else
+        {
+            sr.enabled = true;
+        }
+    }
+
+    */
     void FlashWhileInvincible()
     {
         sr.material.color = pState.invincible ? Color.Lerp(Color.white, Color.black, Mathf.PingPong(Time.time * hitFlashSpeed, 1.0f)) : Color.white;
@@ -478,7 +518,7 @@ public class PlayerController : MonoBehaviour
 
     void RestoreTimeScale()
     {
-        Debug.Log("RestoreTimeScale Running");
+        //Debug.Log("RestoreTimeScale Running");
         if (restoreTime)
         {
             if (Time.timeScale < 1)
@@ -549,7 +589,7 @@ public class PlayerController : MonoBehaviour
     }
 
     //Makes Health a Property and lets us get and set health as needed (health and Health are different in this case)
-    int Health
+    public int Health
     {
         get { return health; }
         set
@@ -558,10 +598,6 @@ public class PlayerController : MonoBehaviour
             {
                 health = Mathf.Clamp(value, 0, maxHealth);
 
-                /* Commenting this out for now. This will be used for our hearts UI. Since we don't have the assets right now,
-                 * this is causing everything to stop progressing past this point, causing our enemy infinite damage bug
-                 * as well as our instant heal bug
-                 */
                 if (onHealthChangedCallBack != null)
                 {
                     onHealthChangedCallBack.Invoke();
@@ -570,7 +606,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    float Mana
+    public float Mana
     {
         get { return mana; }
         set
@@ -608,6 +644,11 @@ public class PlayerController : MonoBehaviour
                 healTimer = 0;
             }
         }
+    }
+
+    public void HealthPickup()
+    {
+        Health++;
     }
 
     //Prevents health from going above max and below min
@@ -681,4 +722,5 @@ public class PlayerController : MonoBehaviour
             jumpBufferCounter--;
         }
     }
+
 }

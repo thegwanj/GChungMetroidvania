@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CameraFollow : MonoBehaviour
 {
@@ -22,6 +23,15 @@ public class CameraFollow : MonoBehaviour
 
         halfHeight = Camera.main.orthographicSize;
         halfWidth = halfHeight * Camera.main.aspect;
+
+        if(SceneManager.GetActiveScene().name == "Forest_1" || SceneManager.GetActiveScene().name == "Forest_2")
+        {
+            AudioManager.instance.PlayLevelMusic();
+        }
+        else if(SceneManager.GetActiveScene().name == "Cave_1")
+        {
+            AudioManager.instance.PlayUndergroundLevelMusic();
+        }
     }
 
     // Update is called once per frame
@@ -34,11 +44,20 @@ public class CameraFollow : MonoBehaviour
         }
         else
         {
-            //Positions camera so that it can only move within the boundaries we set for it
-            transform.position = new Vector3(
-                Mathf.Clamp(player.transform.position.x, boundsBox.bounds.min.x + halfWidth, boundsBox.bounds.max.x - halfWidth),
-                Mathf.Clamp(player.transform.position.y, boundsBox.bounds.min.y + halfHeight, boundsBox.bounds.max.y - halfHeight),
-                transform.position.z);
+            if(player != null)
+            {
+                //Positions camera so that it can only move within the boundaries we set for it
+                transform.position = new Vector3(
+                    Mathf.Clamp(player.transform.position.x, boundsBox.bounds.min.x + halfWidth, boundsBox.bounds.max.x - halfWidth),
+                    Mathf.Clamp(player.transform.position.y, boundsBox.bounds.min.y + halfHeight, boundsBox.bounds.max.y - halfHeight),
+                    transform.position.z);
+            }
+            else
+            {
+                //Useful for if we are moving between scenes that have a Player object in both of them
+                Debug.Log("No Player found. Searching for Player");
+                player = FindObjectOfType<PlayerController>();
+            }
         }
     }
 }

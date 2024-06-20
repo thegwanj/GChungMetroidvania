@@ -50,7 +50,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    //This is public so it can be referrenced in PlayerController
     public virtual void EnemyHit(float _damageDone, Vector2 _hitDirection, float _hitForce)
     {
         health -= _damageDone;

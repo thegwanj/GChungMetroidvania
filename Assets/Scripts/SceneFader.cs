@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class SceneFader : MonoBehaviour
 {
-    [SerializeField] private float fadeTime;
+    [SerializeField] public float fadeTime;
 
     private Image fadeOutUIImage;
 
@@ -67,6 +67,22 @@ public class SceneFader : MonoBehaviour
         fadeOutUIImage.enabled = true;
 
         yield return Fade(_fadeDirection);
+
+        //Save our progress in between scenes
+        PlayerData playerData = new PlayerData
+        {
+            health = PlayerController.Instance.Health,
+            mana = PlayerController.Instance.Mana,
+            currentLocation = PlayerController.Instance.transform.position,
+            currentScene = SceneManager.GetActiveScene().name,
+
+            canJump = PlayerController.Instance.pState.canJump,
+            canDoubleJump = PlayerController.Instance.pState.canDoubleJump,
+            canDash = PlayerController.Instance.pState.canDash,
+            canHeal = PlayerController.Instance.pState.canHeal
+        };
+
+        SaveSystem.SaveData(playerData);
 
         SceneManager.LoadScene(_sceneToLoad);
     }
