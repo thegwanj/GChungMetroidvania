@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class AbilityUnlock : MonoBehaviour
 {
     public bool unlockJump, unlockDoubleJump, unlockDash, unlockHeal;
     bool used;
+
+    public string unlockMessage;
+    public TMP_Text unlockText;
 
     private void Start()
     {
@@ -53,7 +57,14 @@ public class AbilityUnlock : MonoBehaviour
             {
                 PlayerController.Instance.pState.canHeal = true;
             }
-            
+
+            unlockText.transform.parent.SetParent(null);
+            unlockText.transform.parent.position = transform.position;
+
+            unlockText.text = unlockMessage;
+            unlockText.gameObject.SetActive(true);
+
+            Destroy(unlockText.transform.parent.gameObject, 5f);
             Destroy(gameObject);
         }
     }

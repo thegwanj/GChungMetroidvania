@@ -9,6 +9,9 @@ public class Bench : MonoBehaviour
     public bool interacted;
     private PlayerController player;
 
+    [SerializeField] GameObject saveEffect;
+    [SerializeField] GameObject tip;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,12 +27,18 @@ public class Bench : MonoBehaviour
             Debug.Log("Interacted!");
             SaveGame();
             Debug.Log("Game Saved!");
+            GameObject saveComplete = Instantiate(saveEffect, transform.position, Quaternion.identity);
+            Destroy(saveComplete, 2f);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D _collision)
     {
-        if (_collision.CompareTag("Player")) collidingWithPlayer = true;
+        if (_collision.CompareTag("Player"))
+        {
+            collidingWithPlayer = true;
+            tip.SetActive(true);
+        }
     }
 
     private void OnTriggerExit2D(Collider2D _collision)
@@ -37,6 +46,7 @@ public class Bench : MonoBehaviour
         if (_collision.CompareTag("Player"))
         {
             collidingWithPlayer = false;
+            tip.SetActive(false);
         }
     }
 
